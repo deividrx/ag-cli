@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch AG",
+      "request": "launch",
+      "mainClass": "algoritmos_evolucionarios.AG",
+      "projectName": "ia",
+      "console": "externalTerminal"
+    },
+    {
+      "type": "java",
+      "name": "Launch ProjetoIA",
+      "request": "launch",
+      "mainClass": "br.com.senai.ia.ProjetoIA",
+      "projectName": "ia",
+      "args": "-C=DOUBLE"
+    }
+  ]
+}
