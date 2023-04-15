@@ -4,6 +4,9 @@ import br.com.senai.ia.ag.AG;
 import br.com.senai.ia.ag.AGInitOpts;
 import br.com.senai.ia.factories.BinaryAGFactory;
 import br.com.senai.ia.factories.DoubleAGFactory;
+import br.com.senai.ia.functions.FuncaoF6;
+import br.com.senai.ia.functions.FuncaoOtimizacao;
+import br.com.senai.ia.functions.FuncaoShubert;
 import br.com.senai.ia.individuos.BinaryIndividuo;
 import br.com.senai.ia.individuos.DoubleIndividuo;
 import picocli.CommandLine;
@@ -27,7 +30,10 @@ public class ProjetoIA implements Runnable {
     private double taxaMutacao = 0.10;
 
     @Option(names = { "-C", "--codec" }, description = "Codificação a ser usada")
-    private TipoAlgoritmo tipoCodec = TipoAlgoritmo.DOUBLE;
+    private Tipos.Codec tipoCodec = Tipos.Codec.DOUBLE;
+
+    @Option(names = {"-f", "--funcao"}, description = "Função a ser usada")
+    private Tipos.Funcao func = Tipos.Funcao.F6;
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new ProjetoIA()).execute(args);
@@ -46,15 +52,21 @@ public class ProjetoIA implements Runnable {
             .taxaMutacao(taxaMutacao)
             .taxaCrossover(taxaCrossover).build();
 
+        FuncaoOtimizacao funcEscolhida;
+        if (func == Tipos.Funcao.F6)
+            funcEscolhida = new FuncaoF6();
+        else
+            funcEscolhida = new FuncaoShubert();
+
         // Rodando o Algoritmo
         switch (tipoCodec) {
             case BINARY -> {
-                var agFactory = new BinaryAGFactory();
-                new AG<BinaryIndividuo>(agFactory, opts).run();
+                var agFactory = new BinaryAGFactory(funcEscolhida);
+                new AG<BinaryIndividuo>(agFactory, opts, funcEscolhida).run();
             }
             case DOUBLE -> {
-                var agFactory = new DoubleAGFactory();
-                new AG<DoubleIndividuo>(agFactory, opts).run();
+                var agFactory = new DoubleAGFactory(funcEscolhida);
+                new AG<DoubleIndividuo>(agFactory, opts, funcEscolhida).run();
             }
         }
     }
@@ -67,11 +79,12 @@ public class ProjetoIA implements Runnable {
                  @|bold,green ->|@ Número de Gerações: @|bold %s|@
                  @|bold,green ->|@ Tamanho da população: @|bold %s|@
                  @|bold,green ->|@ Tipo Codec: @|bold %s|@
+                 @|bold,green ->|@ Função: @|bold %s|@
 
                 """);
 
         System.out.print(
-                String.format(header, taxaMutacao, taxaCrossover, numGeracoes, tamPopulacao, tipoCodec));
+                String.format(header, taxaMutacao, taxaCrossover, numGeracoes, tamPopulacao, tipoCodec, func));
 
         String question = "Correto? (s)sim/(n)não ";
         String value = System.console().readLine(question).toLowerCase();

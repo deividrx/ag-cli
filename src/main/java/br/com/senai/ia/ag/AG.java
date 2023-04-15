@@ -3,6 +3,7 @@ package br.com.senai.ia.ag;
 import br.com.senai.ia.avaliador.Avaliador;
 import br.com.senai.ia.crossover.Crossover;
 import br.com.senai.ia.factories.AGFactory;
+import br.com.senai.ia.functions.FuncaoOtimizacao;
 import br.com.senai.ia.individuos.Individuo;
 import br.com.senai.ia.mutacao.Mutacao;
 import lombok.AllArgsConstructor;
@@ -10,9 +11,10 @@ import picocli.CommandLine.Help.Ansi;
 
 @AllArgsConstructor
 public class AG<T extends Individuo> {
-    
+
     private AGFactory<T> agFactory;
     private AGInitOpts opts;
+    private FuncaoOtimizacao funcaoOtimizacao;
 
     public void run() {
         // Operações
@@ -34,25 +36,32 @@ public class AG<T extends Individuo> {
             T melhor = deepCopy(pop.getMelhorIndividuo());
 
             // Mostrando info
-            var media = pop.calculaMedia();
-            printInfoGen(genIndex, media, melhor.getFitness());
+            // if (genIndex % 100 == 0) {
+                var media = pop.calculaMedia();
+                printInfoGen(genIndex, media, melhor.getFitness());
+            // }
 
             // Parar o Algoritmo quando achar a melhor soluçaõ se achar :p
-            if (melhor.getFitness() == 1) break;
+            if (melhor.getFitness() == funcaoOtimizacao.solucao()) {
+                // var media = pop.calculaMedia();
+                printInfoGen(genIndex, media, melhor.getFitness());
+                break;
+            }
 
             // Obtendo os pais
             Populacao<T> pais = new Selecao<>(pop).getPais();
 
             // Criando a nova geração
-            pop = aval.avalia(
-                mutex.fazMutacao(
-                    cross.fazCrossover(pais, opts.getTaxaCrossover()), opts.getTaxaMutacao()));
+            var newGen = aval.avalia(
+                    mutex.fazMutacao(
+                            cross.fazCrossover(pais, opts.getTaxaCrossover()), opts.getTaxaMutacao()));
 
             // Aplicando o Elitismo
-            var pior = pop.getPiorIndividuo();
+            var pior = newGen.getPiorIndividuo();
             if (melhor.getFitness() > pior.getFitness())
-                pop.replacePiorIndividuo(melhor);
+                newGen.replacePiorIndividuo(melhor);
 
+            pop = newGen;
             genIndex++;
         }
     }

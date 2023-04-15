@@ -14,8 +14,8 @@
       "name": "Launch ProjetoIA",
       "request": "launch",
       "mainClass": "br.com.senai.ia.ProjetoIA",
-      "projectName": "ia",
-      "args": "-C=DOUBLE"
+      "projectName": "ag-cli",
+      "args": "-C DOUBLE -m 0.8 -f F6 -p 4"
     }
   ]
 }
