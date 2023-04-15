@@ -11,4 +11,5 @@ public class AGInitOpts {
     private int numGeracoes;
     private double taxaCrossover;
     private Double taxaMutacao;
+    private String chartName;
 }

@@ -1,5 +1,14 @@
 package br.com.senai.ia.ag;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import br.com.senai.ia.avaliador.Avaliador;
 import br.com.senai.ia.crossover.Crossover;
 import br.com.senai.ia.factories.AGFactory;
@@ -15,6 +24,7 @@ public class AG<T extends Individuo> {
     private AGFactory<T> agFactory;
     private AGInitOpts opts;
     private FuncaoOtimizacao funcaoOtimizacao;
+    private final XYSeries graph = new XYSeries("F6");
 
     public void run() {
         // Operações
@@ -64,6 +74,23 @@ public class AG<T extends Individuo> {
             pop = newGen;
             genIndex++;
         }
+
+        if (opts.getChartName() != null) {
+            createGraph();
+        }
+    }
+
+    public void createGraph() {
+        // output graph
+        var dataset = new XYSeriesCollection(graph);
+        JFreeChart chart = ChartFactory.createXYLineChart(
+            "", "Número da geração", "fitness", dataset);
+
+        try {
+            ChartUtils.saveChartAsPNG(new File(opts.getChartName()), chart, 450, 400);
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -78,6 +105,7 @@ public class AG<T extends Individuo> {
                     Fitness do melhor: @|bold %s|@
                 """);
 
+        graph.add(num, ind);
         System.out.print(String.format(header, num, media, ind));
     }
 }

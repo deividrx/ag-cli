@@ -35,6 +35,9 @@ public class ProjetoIA implements Runnable {
     @Option(names = {"-f", "--funcao"}, description = "Função a ser usada")
     private Tipos.Funcao func = Tipos.Funcao.F6;
 
+    @Option(names = {"-o", "--output"}, description = "Nome de arquivo do grafico")
+    private String output;
+
     public static void main(String[] args) {
         int exitCode = new CommandLine(new ProjetoIA()).execute(args);
         System.exit(exitCode);
@@ -50,6 +53,7 @@ public class ProjetoIA implements Runnable {
             .tamPopulacao(tamPopulacao)
             .numGeracoes(numGeracoes)
             .taxaMutacao(taxaMutacao)
+            .chartName(output)
             .taxaCrossover(taxaCrossover).build();
 
         FuncaoOtimizacao funcEscolhida;

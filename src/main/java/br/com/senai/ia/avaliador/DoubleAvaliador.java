@@ -16,7 +16,11 @@ public class DoubleAvaliador implements Avaliador<DoubleIndividuo> {
             double x = doubleIndividuo.getGene(0);
             double y = doubleIndividuo.getGene(1);
             double fitness = funcaoOtimizacao.funcao(x, y);
-            doubleIndividuo.setFitness(fitness);
+            fitness = fitness / funcaoOtimizacao.solucao();
+            if (fitness < 0) {
+                fitness = 0;
+            }
+            doubleIndividuo.setFitness(Math.abs(fitness));
         }
         return pop;
     }
