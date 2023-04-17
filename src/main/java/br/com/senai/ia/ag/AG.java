@@ -1,11 +1,13 @@
 package br.com.senai.ia.ag;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogarithmicAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -59,12 +61,10 @@ public class AG<T extends Individuo> {
             }
 
             // Obtendo os pais
-            Populacao<T> pais = new Selecao<>(pop).getPais();
-
-            // Criando a nova geração
-            var newGen = aval.avalia(
-                    mutex.fazMutacao(
-                            cross.fazCrossover(pais, opts.getTaxaCrossover()), opts.getTaxaMutacao()));
+            var pais = new Selecao<>(pop).getPais();
+            pais = cross.fazCrossover(pais, opts.getTaxaCrossover());
+            pais = mutex.fazMutacao(pop, opts.getTaxaMutacao());
+            var newGen = aval.avalia(pais); 
 
             // Aplicando o Elitismo
             var pior = newGen.getPiorIndividuo();
@@ -86,10 +86,16 @@ public class AG<T extends Individuo> {
         JFreeChart chart = ChartFactory.createXYLineChart(
             "", "Número da geração", "fitness", dataset);
 
+        XYPlot plot = chart.getXYPlot();
+        NumberAxis domainAxis = new NumberAxis("fitness");
+        NumberAxis rangeAxis = new LogarithmicAxis("Número da geração");
+        plot.setDomainAxis(rangeAxis);
+        plot.setRangeAxis(domainAxis);
+
         try {
             ChartUtils.saveChartAsPNG(new File(opts.getChartName()), chart, 450, 400);
         } catch (Exception e) {
-            //TODO: handle exception
+            System.err.println("Path inválido!");
         }
     }
 
