@@ -1,5 +1,9 @@
 package br.com.senai.ia;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+
 import br.com.senai.ia.ag.AG;
 import br.com.senai.ia.ag.AGInitOpts;
 import br.com.senai.ia.factories.BinaryAGFactory;
@@ -45,6 +49,16 @@ public class ProjetoIA implements Runnable {
 
     @Override
     public void run() {
+        if (output != null) {
+            var path = FileSystems.getDefault().getPath(this.output).toAbsolutePath();
+            path = path.getParent();
+            boolean noExist = Files.notExists(path, LinkOption.NOFOLLOW_LINKS);
+            if (noExist) {
+                System.err.println(showError("Path inválido!"));
+                System.exit(0);
+            }
+        }
+        
         // Confirmar os valores
         var confirm = confirmDialog();
         if (!confirm) System.exit(0);
@@ -93,5 +107,9 @@ public class ProjetoIA implements Runnable {
         String question = "Correto? (s)sim/(n)não ";
         String value = System.console().readLine(question).toLowerCase();
         return value.equals("s");
+    }
+
+    private String showError(String text) {
+        return Ansi.AUTO.string(String.format("@|bold,red %s|@", text));
     }
 }
