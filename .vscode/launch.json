@@ -15,7 +15,7 @@
       "request": "launch",
       "mainClass": "br.com.senai.ia.ProjetoIA",
       "projectName": "ag-cli",
-      "args": "-C DOUBLE -m 0.8 -f F6 -p 4"
+      "args": "-C DOUBLE -m 0.8 -f SHUBERT -p 4"
     }
   ]
 }

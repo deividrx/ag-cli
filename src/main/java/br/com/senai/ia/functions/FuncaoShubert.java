@@ -18,7 +18,12 @@ public class FuncaoShubert implements FuncaoOtimizacao {
             s1 += i * Math.cos((i + 1) * y + 1);
         }
 
-        return s2 - s1;
+        var result = s2 - s1;
+
+        if (result > 0)
+            return 0; 
+        else
+            return Math.abs(result);
     }
 
     @Override

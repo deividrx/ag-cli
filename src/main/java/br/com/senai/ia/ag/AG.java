@@ -29,6 +29,18 @@ public class AG<T extends Individuo> {
     private final XYSeries graph = new XYSeries("F6");
 
     public void run() {
+        // Criar grafico mesmo ao parar o programa com um SIGINT ou SIGTERM
+        if (opts.getChartName() != null) {
+            Runtime.getRuntime().addShutdownHook(
+                new Thread() {
+                    @Override
+                    public void run() {
+                        createGraph();
+                    }
+                }
+            );
+        }
+
         // Operações
         Avaliador<T> aval = agFactory.criaAvaliador();
         Crossover<T> cross = agFactory.criaCrossover();
