@@ -40,4 +40,9 @@ public class FuncaoShubert implements FuncaoOtimizacao {
     public double solucao() {
         return SOLUCAO;
     }
+
+    @Override
+    public String getName() {
+        return "Shubert";
+    }
 }

@@ -17,17 +17,22 @@ import br.com.senai.ia.factories.AGFactory;
 import br.com.senai.ia.functions.FuncaoOtimizacao;
 import br.com.senai.ia.individuos.Individuo;
 import br.com.senai.ia.mutacao.Mutacao;
-import lombok.AllArgsConstructor;
 import picocli.CommandLine.Help.Ansi;
 import sun.misc.Signal;
 
-@AllArgsConstructor
 public class AG<T extends Individuo> {
 
     private AGFactory<T> agFactory;
     private AGInitOpts opts;
     private FuncaoOtimizacao funcaoOtimizacao;
-    private final XYSeries graph = new XYSeries("F6");
+    private final XYSeries graph;
+
+    public AG(AGFactory<T> agFactory, AGInitOpts opts, FuncaoOtimizacao funcaoOtimizacao) {
+        this.agFactory = agFactory;
+        this.opts = opts;
+        this.funcaoOtimizacao = funcaoOtimizacao;
+        graph = new XYSeries(funcaoOtimizacao.getName());
+    }
 
     public void run() {
         // Criar grafico mesmo ao parar o programa com um SIGINT ou SIGTERM

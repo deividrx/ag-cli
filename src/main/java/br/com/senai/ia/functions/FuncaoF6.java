@@ -27,4 +27,9 @@ public class FuncaoF6 implements FuncaoOtimizacao {
     public double solucao() {
         return SOLUCAO;
     }
+
+    @Override
+    public String getName() {
+        return "F6";
+    }
 }
