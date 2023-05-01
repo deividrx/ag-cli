@@ -79,7 +79,7 @@ public class ProjetoIA implements Runnable {
         // Rodando o Algoritmo
         switch (tipoCodec) {
             case BINARY -> {
-                var agFactory = new BinaryAGFactory(funcEscolhida);
+                var agFactory = new BinaryAGFactory();
                 new AG<BinaryIndividuo>(agFactory, opts, funcEscolhida).run();
             }
             case DOUBLE -> {

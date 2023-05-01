@@ -5,7 +5,6 @@ import br.com.senai.ia.avaliador.Avaliador;
 import br.com.senai.ia.avaliador.AvaliadorBinary;
 import br.com.senai.ia.crossover.BinaryCrossover;
 import br.com.senai.ia.crossover.Crossover;
-import br.com.senai.ia.functions.FuncaoOtimizacao;
 import br.com.senai.ia.individuos.BinaryIndividuo;
 import br.com.senai.ia.mutacao.BinaryMutacao;
 import br.com.senai.ia.mutacao.Mutacao;
@@ -14,13 +13,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class BinaryAGFactory implements AGFactory<BinaryIndividuo> {
 
-    private FuncaoOtimizacao func;
-
     @Override
     public Populacao<BinaryIndividuo> inciaPopulacao(Integer tamPopulacao) {
 		Populacao<BinaryIndividuo> pop = new Populacao<>(tamPopulacao);
 		for (int i = 0; i < tamPopulacao; i++) {
-			BinaryIndividuo ind = new BinaryIndividuo();
+			BinaryIndividuo ind= new BinaryIndividuo();
 			for (int j = 0; j < 44; j++) {
 				double num = Math.random();
 				if (num < 0.5) {
