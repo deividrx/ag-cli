@@ -19,6 +19,7 @@ import br.com.senai.ia.individuos.Individuo;
 import br.com.senai.ia.mutacao.Mutacao;
 import lombok.AllArgsConstructor;
 import picocli.CommandLine.Help.Ansi;
+import sun.misc.Signal;
 
 @AllArgsConstructor
 public class AG<T extends Individuo> {
@@ -31,14 +32,10 @@ public class AG<T extends Individuo> {
     public void run() {
         // Criar grafico mesmo ao parar o programa com um SIGINT ou SIGTERM
         if (opts.getChartName() != null) {
-            Runtime.getRuntime().addShutdownHook(
-                new Thread() {
-                    @Override
-                    public void run() {
-                        createGraph();
-                    }
-                }
-            );
+            Signal.handle(new Signal("INT"), signal -> {
+                createGraph();
+                System.exit(0);
+            });
         }
 
         // Operações
@@ -105,7 +102,7 @@ public class AG<T extends Individuo> {
         plot.setRangeAxis(domainAxis);
 
         try {
-            ChartUtils.saveChartAsPNG(new File(opts.getChartName()), chart, 450, 400);
+            ChartUtils.saveChartAsPNG(new File(opts.getChartName() + ".png"), chart, 450, 400);
         } catch (Exception e) {
             System.err.println("Path inválido!");
         }

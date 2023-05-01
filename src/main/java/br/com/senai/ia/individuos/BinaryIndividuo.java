@@ -10,6 +10,11 @@ public class BinaryIndividuo implements Individuo {
 		this.fitness = 0;
 	}
 
+	public BinaryIndividuo(int size) {
+		this.genes = new int[size];
+		this.fitness = 0;
+	}
+
 	public BinaryIndividuo(int[] genes) {
 		this.genes = genes;
 		this.fitness = 0;
